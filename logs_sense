@@ -1,0 +1,186 @@
+LOGS.JSON数据解析
+
+
+### http://192.168.11.248:8083/job/service/129/wfapi/describe ！
+
+
+"_links"."self"."href": 本次pipeline执行过程的描述地址 http://192.168.11.248:8083/job/service/129/wfapi/describe
+
+"_links"."changesets"."href": 本次执行过程的Changes信息描述地址 http://192.168.11.248:8083/job/service/114/wfapi/changesets(暂时没发现有用的信息，返回的是关于gitlab项目的一些描述信息)
+
+"id": 本次执行过程的id
+
+"name": 本次执行过程的name, 默认为 "#id"
+
+"status": 本次执行过程的状态，"FAILURE" or "SUCCESS"
+
+"startTimeMillis": 本次执行过程的开始时间，timestamp类型，转换公式为 time.localtime("startTimeMillis" / 1000 + 28800)
+
+"endTimeMillis": 本次执行过程的结束时间，timestamp类型
+
+"durationMillis": 本次执行过程消耗的时间，timestamp类型,转换公式为 durationMillis / 1000 s.
+
+"queueDurationMillis": 本次执行过程共有几个阶段，(最后对日志进行整理获取打包的脚本也属于一个阶段)
+
+"pauseDurationMillis": 本次执行过程中暂停中止的次数
+
+"stages": 本次执行过程中的stage阶段
+
+"stages"."_links"."self"."href": 本次pipeline执行过程中各stage阶段的描述地址 http://192.168.11.248:8083/job/service/129/execution/node/12/wfapi/describe，其中地址中的数字代表pipeline的各个行数
+			
+"stages"."id": 各stage阶段的id，一般默认为stage的第一行行数
+			
+"stages"."name": 各stage阶段的name,比如"git clone","mvn test","mvn build","Image Build And Push","deploy iamges"
+			
+"stages"."execNode": 不清楚
+			
+"stages"."status": 各stage阶段的状态，"FAILURE" or "SUCCESS"
+			
+"stages"."startTimeMillis": 各stage阶段的开始时间，timestamp类型
+			
+"stages"."durationMillis": 各stage阶段的运行时间，timestamp类型
+			
+"stages"."pauseDurationMillis": 各stage阶段中暂停中止的次数
+
+
+### http://192.168.11.248:8083/job/service/114/execution/node/6/wfapi/describe  ！
+
+'''
+其中行数从2开始，到48结束，每个pipeline不一定相同，但只有"stages"."_links"."self"."href"里的地址含有有意义的日志信息
+如果日志状态为失败，则有效的"stages"."_links"."self"."href"的地址对应的行数是从2开始，从失败的位置结束，通过这个地址可以查看每行代码的详细日志信息
+这里node的意思就是对应的行数，本次pipeline的关键行数为6,12,17,22,39
+'''
+
+
+
+「 含有子node的父node节点的describe信息地址解析 」 ！
+
+"_links"."self"."href": pipeline各个node的日志信息的相对地址 "/job/service/114/execution/node/6/wfapi/describe"
+	
+"id": 当前node的id
+	
+"name": 当前node的name, 比如"git clone"
+	
+"execNode": 不清楚，暂时没什么用处
+
+"status": 当前node的运行状态，"SUCCESS" or "FAILEURE"
+	
+"startTimeMillis": 当前node的开始时间
+
+"durationMillis": 当前node的运行时间
+	
+"pauseDurationMillis": 当前node的暂停中止的次数
+
+"stageFlowNodes": 当前stage阶段对应的子node，不止一个
+	
+"stageFlowNodes"."_links"."self"."href": 当前stage阶段对应的子node的日志信息的相对地址 "/job/service/114/execution/node/7/wfapi/describe"
+	
+"stageFlowNodes"."_links"."log"."href": 当前stage阶段对应的子node的详细日志信息的相对地址 "/job/service/114/execution/node/7/wfapi/log"，如果当前node进行了相应动作，则会产生有效的日志地址
+	
+"stageFlowNodes"."id": 当前stage阶段对应的子node的id
+	
+"stageFlowNodes"."name": 当前stage阶段对应的子node的name， 比如 "Git"
+	
+"stageFlowNodes"."execNode": 不清楚
+	
+"stageFlowNodes"."status": 当前stage阶段对应的子node的运行状态 "SUCCESS"or"FAILURE"
+	
+"stageFlowNodes"."startTimeMillis": 当前stage阶段对应的子node的开始时间
+	
+"stageFlowNodes"."durationMillis": 当前stage阶段对应的子node的运行时间
+	
+"stageFlowNodes"."pauseDurationMillis": 当前stage阶段对应的子node的暂停中止的次数
+	
+"stageFlowNodes"."parentNodes": 当前stage阶段对应的子node的父node， 数组类型
+
+
+「 子node节点的describe信息地址解析 」 ！
+
+"_links"."self"."href": 当前stage阶段对应的子node的日志信息的相对地址 "/job/service/114/execution/node/7/wfapi/describe"
+	
+"_links"."log"."href": 当前stage阶段对应的子node的详细日志信息的相对地址 "/job/service/114/execution/node/7/wfapi/log"，如果当前node进行了相应动作，则会产生有效的日志地址
+	
+"id": 当前stage阶段对应的子node的id
+	
+"name": 当前stage阶段对应的子node的name， 比如 "Git"
+	
+"execNode": 不清楚
+	
+"status": 当前stage阶段对应的子node的运行状态 "SUCCESS"or"FAILURE"
+	
+"startTimeMillis": 当前stage阶段对应的子node的开始时间
+	
+"durationMillis": 当前stage阶段对应的子node的运行时间
+	
+"pauseDurationMillis": 当前stage阶段对应的子node的暂停中止的次数
+	
+"parentNodes": 当前stage阶段对应的子node的父node， 数组类型
+
+
+「 其余node的describe信息地址解析 」
+
+"_links"."self"."href": 当前stage阶段对应的子node的日志信息的相对地址 "/job/service/114/execution/node/7/wfapi/describe"
+	
+"id": 当前stage阶段对应的子node的id
+	
+"name": 当前stage阶段对应的子node的name， 比如 "Git"
+	
+"execNode": 不清楚
+	
+"status": 当前stage阶段对应的子node的运行状态 "SUCCESS"or"FAILURE"
+	
+"startTimeMillis": 当前stage阶段对应的子node的开始时间
+	
+"durationMillis": 当前stage阶段对应的子node的运行时间
+	
+"pauseDurationMillis": 当前stage阶段对应的子node的暂停中止的次数
+
+
+「 运行状态为失败的node的describe信息地址解析 」
+
+与以上三个地址解析基本相同，不过因为失败，所以会出现失败的相关信息，因为只有父node的失败日志信息与父node对应的子node的失败日志信息有意义，我们分别解析一下这两种node的失败日志信息地址
+
+                                                「 父node增加的属性数据 」
+
+"error": 错误信息
+
+"error"."message": 错误信息内容，比如"script returned exit code 1"
+
+"error"."type":	错误信息类型，比如"hudson.AbortException"
+
+"stageFlowNodes"."error": 子node的错误信息
+	
+"stageFlowNodes"."error"."message": 子node的错误信息内容，比如"script returned exit code 1"
+
+"stageFlowNodes"."error"."type": 子node的错误信息类型，比如"hudson.AbortException"
+
+"stageFlowNodes"."error"."parameterDescription": 子node的错误信息参数描述，比如"mvn clean install service"
+
+                                                 「 子node增加的属性数据 」
+
+"error": 子node的错误信息
+	
+"error"."message": 子node的错误信息内容，比如"script returned exit code 1"
+
+"error"."type": 子node的错误信息类型，比如"hudson.AbortException"
+
+"error"."parameterDescription": 子node的错误信息参数描述，比如"mvn clean install service"
+
+
+### http://192.168.11.248:8083/job/service/114/execution/node/7/wfapi/log  ！
+
+'''
+当前node节点的详细日志信息
+'''
+	
+"nodeId": 当前node节点的id
+
+"nodeStatus": 当前node的运行状态，"FAILED"or"SUCCESS"
+
+"length": 当前node输出的日志长度，int类型
+
+"hasMore": 不清楚，默认为false
+
+"text": 当前node输出日志的详细描述，如下：
+"[service] Running shell script\n+ mvn clean install service\n[INFO] Scanning for projects...\n[INFO]\n[INFO]---------------------------------------------------------------------\n[INFO] Building test10.0.1-SNAPSHOT\n[INFO] ------------------------------------------------------------------------\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD FAILURE\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time:0.306 s\n[INFO] Finished at:2018-09-28T02:35:56+00:00\n[INFO] Final Memory:12M/303M\n[INFO]------------------------------------------------------------------------\n[ERROR] Unknown lifecycle phase \"service\". You must specify a valid lifecycle phase or a goal in the format &lt;plugin-prefix&gt;:&lt;goal&gt; or &lt;plugin-group-id&gt;:&lt;plugin-artifact-id&gt;[:&lt;plugin-version&gt;]:&lt;goal&gt;. Available lifecycle phases are:validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes,test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy, pre-clean, clean, post-clean, pre-site, site, post-site, site-deploy. -&gt;[Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] <a href='http://cwiki.apache.org/confluence/display/MAVEN/LifecyclePhaseNotFoundException'>http://cwiki.apache.org/confluence/display/MAVEN/LifecyclePhaseNotFoundException</a>\n","consoleUrl":"/job/service/114/execution/node/18/log"
+

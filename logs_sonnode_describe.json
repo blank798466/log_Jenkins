@@ -1,0 +1,16 @@
+{
+	"_links":
+		{"self":
+			{"href":"/job/service/114/execution/node/7/wfapi/describe"},
+		"log":
+			{"href":"/job/service/114/execution/node/7/wfapi/log"}
+		},
+	"id":"7",
+	"name":"Git",
+	"execNode":"",
+	"status":"SUCCESS",
+	"startTimeMillis":1538102145915,
+	"durationMillis":464,
+	"pauseDurationMillis":0,
+	"parentNodes":["6"]
+}

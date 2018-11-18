@@ -1,0 +1,39 @@
+{"_links":
+	{"self":
+		{"href":"/job/service/114/execution/node/17/wfapi/describe"}
+	},
+	"id":"17",
+	"name":"mvn build",
+	"execNode":"",
+	"status":"FAILED",
+	"error":
+		{"message":"script returned exit code 1",
+		"type":"hudson.AbortException"
+		},
+	"startTimeMillis":1538102155313,
+	"durationMillis":1474,
+	"pauseDurationMillis":0,
+	"stageFlowNodes":
+		[{"_links":
+			{"self":
+				{"href":"/job/service/114/execution/node/18/wfapi/describe"
+				},
+				"log":{
+					"href":"/job/service/114/execution/node/18/wfapi/log"
+				}
+			},
+		"id":"18",
+		"name":"Shell Script",
+		"execNode":"",
+		"status":"FAILED",
+		"error":
+			{"message":"script returned exit code 1",
+			"type":"hudson.AbortException"
+			},
+		"parameterDescription":"mvn clean install service",
+		"startTimeMillis":1538102155340,
+		"durationMillis":1440,
+		"pauseDurationMillis":0,
+		"parentNodes":["17"]
+		}]
+}
